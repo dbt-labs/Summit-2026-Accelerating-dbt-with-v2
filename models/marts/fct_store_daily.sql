@@ -3,12 +3,12 @@ with orders as (
     select
         order_id,
         store_id,
-        orderedat,
+        ordered_at,
         date_trunc('day', ordered_at) as order_date,
-        sub_total,
+        subtotal,
         tax_paid,
         order_total
-    from {{ ref('stg_jaffle_shop__order') }}
+    from {{ ref('stg_jaffle_shop__orders') }}
 
 ),
 
@@ -16,10 +16,10 @@ stores as (
 
     select
         store_id,
-        store_locaton,
-        taxrate,
-        opened_at,
-        is_open
+        store_location,
+        tax_rate,
+        opened_at--,
+        --is_open
     from {{ ref('stg_jaffle_shop__stores') }}
 
 ),
@@ -33,13 +33,13 @@ daily_rollup as (
         orders.order_date,
 
         count(orders.order_id) as orders_count,
-        sum(coalesce(orders.subtotal)) as daily_subtotal,
-        sum(orders.tax_paid) as daily_tax_paid,
-        sum(orders.order_total) as daily_order_total,
+        sum(coalesce(orders.subtotal,0)) as daily_subtotal,
+        sum(coalesce(orders.tax_paid,0)) as daily_tax_paid,
+        sum(coalesce(orders.order_total,0)) as daily_order_total,
 
         daily_order_total / orders_count as avg_order_total,
 
-        datediff('day', orders.ordered_at, stores.opened_at) as days_since_store_open
+        datediff('day',  stores.opened_at, orders.ordered_at) as days_since_store_open
 
     from orders
     left join stores
@@ -47,7 +47,10 @@ daily_rollup as (
 
     group by
         orders.store_id,
-        orders.order_date
+        stores.store_location,
+        stores.tax_rate,
+        orders.order_date,
+        datediff('day',  stores.opened_at, orders.ordered_at)
 
 )
 
