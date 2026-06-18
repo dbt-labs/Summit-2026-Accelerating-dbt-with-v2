@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: fact_store_daily
+    description: Daily store-level fact table with order and revenue rollups.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - store_id
+              - order_date
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "orders_count > 0"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "daily_order_total >= daily_subtotal"
+    columns:
+      - name: store_id
+        description: Store identifier.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_jaffle_shop__stores')
+                field: store_id
+      - name: store_location
+        description: Store location.
+      - name: tax_rate
+        description: Tax rate applied at the store.
+      - name: order_date
+        description: Day of the aggregated store metrics.
+        data_tests:
+          - not_null
+      - name: orders_count
+        description: Number of orders for the store on the day.
+        data_tests:
+          - not_null
+      - name: daily_subtotal
+        description: Sum of order subtotals for the day.
+        data_tests:
+          - not_null
+      - name: daily_tax_paid
+        description: Sum of tax paid for the day.
+      - name: daily_order_total
+        description: Sum of order totals for the day.
+        data_tests:
+          - not_null
+      - name: avg_order_total
+        description: Average order total for the day.
+      - name: days_since_store_open
+        description: Day difference between the order timestamp and store open date.

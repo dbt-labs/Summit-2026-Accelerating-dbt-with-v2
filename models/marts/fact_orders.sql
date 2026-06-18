@@ -17,8 +17,6 @@ stores as (
     select
         store_id,
         store_location,
-
-
         tax_rate
     from {{ ref('stg_jaffle_shop__stores') }}
 
