@@ -8,7 +8,7 @@ with orders as (
         subtotal,
         tax_paid,
         order_total
-    from {{ ref('stg_jaffle_shop__order') }}
+    from {{ ref('stg_jaffle_shop__orders') }}
 
 ),
 
@@ -17,7 +17,9 @@ stores as (
     select
         store_id,
         store_location,
-        taxrate
+
+
+        tax_rate
     from {{ ref('stg_jaffle_shop__stores') }}
 
 ),
@@ -70,7 +72,7 @@ joined as (
         on orders.store_id = stores.store_id
 
     join item_rollup
-        on order_items.order_id = item_rollup.order_id
+        on orders.order_id = item_rollup.order_id
 
 )
 
