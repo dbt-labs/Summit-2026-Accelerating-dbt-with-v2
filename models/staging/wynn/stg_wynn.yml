@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: stg_wynn__demo
+    description: Staging model for the `wynn_demo` seed with cleaned boolean flags and preserved player-level grain.
+    columns:
+      - name: resolved_player_id
+        description: Canonical player identifier.
+        data_tests:
+          - unique
+          - not_null
+      - name: player_full_name
+      - name: loyalty_card_id
+      - name: casino_player_id
+      - name: pms_guest_id
+      - name: tier
+      - name: tier_credits
+      - name: dedicated_host_id
+      - name: is_hosted
+      - name: gaming_theo_win
+      - name: gaming_actual_win
+      - name: hotel_ancillary_rev
+      - name: comp_dollars_issued
+      - name: blended_worth
+      - name: comp_efficiency_ratio
+      - name: floor_vs_pms_worth_gap
+      - name: carded_sessions
+      - name: hotel_stays
+      - name: days_since_last_play
+      - name: is_reactivation_target
+      - name: is_high_worth_unhosted
+      - name: identity_resolved_from_sources
