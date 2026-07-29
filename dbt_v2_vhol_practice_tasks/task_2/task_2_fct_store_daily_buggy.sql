@@ -4,7 +4,6 @@ with orders as (
         order_id,
         store_id,
         orderedat,
-        date_trunc('day', ordered_at) as order_date,
         sub_total,
         tax_paid,
         order_total
@@ -30,7 +29,7 @@ daily_rollup as (
         orders.store_id,
         stores.store_location,
         stores.tax_rate,
-        orders.order_date,
+        date_trunc('day', orders.ordered_at) as order_date,
 
         count(orders.order_id) as orders_count,
         sum(coalesce(orders.subtotal)) as daily_subtotal,
@@ -47,7 +46,7 @@ daily_rollup as (
 
     group by
         orders.store_id,
-        orders.order_date
+        order_date
 
 )
 
