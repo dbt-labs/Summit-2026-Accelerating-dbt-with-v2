@@ -48,6 +48,10 @@ final as (
         count_unique_location_visits,
         total_spend_pretax,
         total_tax_paid,
+        case
+            when customer_orders_summary.total_spend_pretax > 1000 then 'high_spender'
+        else 'low_spender' 
+        end as customer_spend_level,
         total_spend,
 
         -- boolean
