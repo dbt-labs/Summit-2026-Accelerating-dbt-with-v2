@@ -1,16 +1,16 @@
-# Welcome to the Accelerating dbt with Fusion Workshop! 
+# Welcome to the Accelerating dbt with dbt v2 Workshop! 
 
 ### Getting Started:
 
 1. If you already have a dbt account, log out first.
 2. Sign up for a new account: https://workshops.us1.dbt.com/workshop
-3. Fill out the form, choosing the Accelerating dbt with Fusion workshop. You will be provided a password to use for this Coalesce workshop!
+3. Fill out the form, choosing the Accelerating dbt with dbt v2 workshop. You will be provided a password to use for this dbt Summit workshop!
 4. Submitting the form will launch dbt. Launch dbt Studio.
 5. Try running dbt build in the command bar at the bottom of your IDE.
 
 ### 🥪 The Jaffle Shop 🦘
 
-This is a sandbox project for exploring the basic functionality and latest features of dbt Fusion. 
+This is a sandbox project for exploring the basic functionality and latest features of dbt v2. 
 It's based on a fictional restaurant called the Jaffle Shop that serves [jaffles](https://en.wikipedia.org/wiki/Pie_iron).
 
 The source and staging layers have already been built for you.
