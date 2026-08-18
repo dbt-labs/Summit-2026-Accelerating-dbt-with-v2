@@ -40,6 +40,9 @@ models:
                 field: product_id
 
   - name: stg_jaffle_shop__orders
+    config: 
+      state: 
+        lag_tolerance: 2m
     description: "{{ doc('stg_jaffle_shop__orders') }}"
     columns:
       - name: order_id
