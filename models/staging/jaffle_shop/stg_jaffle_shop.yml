@@ -1,6 +1,9 @@
 models:
   - name: stg_jaffle_shop__customers
     description: "{{ doc('stg_jaffle_shop__customers') }}"
+    config:
+      state:
+        lag_tolerance: 3h
     columns:
       - name: customer_id
         description: "{{ doc('stg_jaffle_shop__customer_id') }}"
@@ -41,6 +44,9 @@ models:
 
   - name: stg_jaffle_shop__orders
     description: "{{ doc('stg_jaffle_shop__orders') }}"
+    config:
+      state:
+        lag_tolerance: 2m
     columns:
       - name: order_id
         description: "{{ doc('stg_jaffle_shop__order_id') }}"
