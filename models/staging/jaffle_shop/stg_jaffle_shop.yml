@@ -18,6 +18,9 @@ models:
 
   - name: stg_jaffle_shop__order_items
     description: "{{ doc('stg_jaffle_shop__order_items') }}"
+    config:
+      state:
+        lag_tolerance: 2m
     columns:
       - name: order_item_id
         description: "{{ doc('stg_jaffle_shop__order_items__order_item_id') }}"

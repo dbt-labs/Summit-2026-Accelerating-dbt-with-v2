@@ -32,4 +32,4 @@ final as (
 
 )
 
-select * from final
+select * from final order by ordered_at desc
