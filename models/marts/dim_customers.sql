@@ -1,67 +1,65 @@
-with 
+with
 
-customers as (
+    customers as (select * from {{ ref("stg_jaffle_shop__customers") }}),
 
-    select * from {{ ref('stg_jaffle_shop__customers') }}
+    orders as (select * from {{ ref("stg_jaffle_shop__orders") }}),
 
-),
+    customer_orders_summary as (
 
-orders as (
+        select
 
-    select * from {{ ref('stg_jaffle_shop__orders') }}
+            orders.customer_id,
+            min(orders.ordered_at) as first_ordered_at,
+            max(orders.ordered_at) as last_ordered_at,
+            count(distinct orders.order_id) > 1 as is_return_customer,
+            count(orders.store_id) as total_location_visits,
+            count(distinct orders.store_id) as count_unique_location_visits,
+            sum(orders.subtotal) as total_spend_pretax,
+            sum(orders.tax_paid) as total_tax_paid,
+            sum(orders.order_total) as total_spend
 
-),
+        from orders
 
-customer_orders_summary as (
+        group by orders.customer_id
 
-    select 
+    ),
 
-        orders.customer_id,
-        min(orders.ordered_at) as first_ordered_at,
-        max(orders.ordered_at) as last_ordered_at,
-        count(distinct orders.order_id) > 1 as is_return_customer,
-        count(orders.store_id) as total_location_visits,
-        count(distinct orders.store_id) as count_unique_location_visits,
-        sum(orders.subtotal) as total_spend_pretax,
-        sum(orders.tax_paid) as total_tax_paid,
-        sum(orders.order_total) as total_spend
+    final as (
 
+        select
 
-    from orders
+            -- primary key
+            customers.customer_id,
 
-    group by orders.customer_id
+            -- details
+            customers.customer_name,
 
-),
+            -- numerics
+            total_location_visits,
+            count_unique_location_visits,
+            total_spend_pretax,
+            total_tax_paid,
+            case
+                when customer_orders_summary.total_spend > 1000
+                then 'high_spender'
+                else 'low_spender'
+            end as customer_spend_level,
+            total_spend,
 
-final as (
+            -- boolean
+            is_return_customer,
 
-    select
-    
-        -- primary key
-        customers.customer_id,
+            -- dates/timestamps
+            first_ordered_at,
+            last_ordered_at
 
-        -- details
-        customers.customer_name,
+        from customers
 
-        -- numerics
-        total_location_visits,
-        count_unique_location_visits,
-        total_spend_pretax,
-        total_tax_paid,
-        total_spend,
+        left join
+            customer_orders_summary
+            on customers.customer_id = customer_orders_summary.customer_id
 
-        -- boolean
-        is_return_customer,
+    )
 
-        -- dates/timestamps
-        first_ordered_at,
-        last_ordered_at
-
-    from customers
-
-    left join customer_orders_summary
-        on customers.customer_id = customer_orders_summary.customer_id
-
-)
-
-select * from final
+select *
+from final
