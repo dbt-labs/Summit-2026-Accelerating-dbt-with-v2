@@ -1,5 +1,8 @@
 models:
 - name: dim_customers
+  config:
+    state:
+      lag_tolerance: 3h
   description: This model consolidates customer information with their order history,
     providing insights into customer behavior and spending patterns. It includes details
     such as the customer's first and last order dates, total spending, and whether
