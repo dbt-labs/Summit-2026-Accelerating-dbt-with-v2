@@ -1,0 +1,8 @@
+models:
+  - name: task_2_fct_store_daily_buggy
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - order_date
+              - store_id
