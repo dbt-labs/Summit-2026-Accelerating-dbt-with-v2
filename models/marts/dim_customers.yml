@@ -30,3 +30,13 @@ models:
     description: The date and time when the customer placed their first order.
   - name: last_ordered_at
     description: The date and time when the customer placed their most recent order.
+
+
+- name: task_1_fct_orders_buggy
+  columns:
+  - name: order_id
+    data_tests:
+      - unique
+  - name: tax_rate
+    data_tests:
+      - not_null
