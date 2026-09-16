@@ -41,6 +41,10 @@ models:
 
   - name: stg_jaffle_shop__orders
     description: "{{ doc('stg_jaffle_shop__orders') }}"
+    config:
+      materialized: table
+      state:
+        lag_tolerance: 3h
     columns:
       - name: order_id
         description: "{{ doc('stg_jaffle_shop__order_id') }}"
