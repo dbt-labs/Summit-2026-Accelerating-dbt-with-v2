@@ -1,0 +1,52 @@
+models:
+  - name: task_2_fct_store_daily_buggy
+    description: Daily order rollup at one row per store and order date.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          name: one_row_per_store_per_day
+          arguments:
+            combination_of_columns:
+              - store_id
+              - order_date
+          description: Each store and order date must identify exactly one row.
+
+      - dbt_utils.expression_is_true:
+          name: avg_order_total_matches_daily_total
+          arguments:
+            expression: >-
+              avg_order_total is not null
+              and orders_count > 0
+              and abs((avg_order_total * orders_count) - daily_order_total) <= 0.01
+          description: Average order total multiplied by order count must reconcile to the daily total within one cent.
+
+      - dbt_utils.expression_is_true:
+          name: daily_order_total_matches_subtotal_plus_tax
+          arguments:
+            expression: >-
+              daily_order_total is not null
+              and daily_subtotal is not null
+              and daily_tax_paid is not null
+              and abs(daily_order_total - (daily_subtotal + daily_tax_paid)) <= 0.01
+          description: Daily order total must equal subtotal plus tax within one cent.
+
+      - dbt_utils.expression_is_true:
+          name: nonnegative_days_since_store_open
+          arguments:
+            expression: "days_since_store_open >= 0"
+          description: Orders cannot predate the opening of their store.
+
+    columns:
+      - name: store_id
+        description: Identifier for the store.
+        data_tests:
+          - not_null
+
+      - name: order_date
+        description: Calendar day on which the store's orders were placed.
+        data_tests:
+          - not_null
+
+      - name: days_since_store_open
+        description: Whole days between the store opening timestamp and the order timestamp.
+        data_tests:
+          - not_null

@@ -1,0 +1,50 @@
+models:
+  - name: task_1_fct_orders_buggy
+    description: >-
+      Order-level fact model enriched with store attributes, item counts, and tax
+      validation fields. Intended to contain one row per order; item metrics may be
+      null for orders without matching order items.
+    columns:
+      - name: order_id
+        description: Primary key for the order-level grain.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: customer_id
+        description: Identifier for the customer who placed the order.
+
+      - name: store_id
+        description: Identifier for the store where the order was placed.
+
+      - name: order_date
+        description: Calendar date on which the order was placed, truncated from the order timestamp.
+
+      - name: subtotal
+        description: Order amount before tax.
+
+      - name: tax_paid
+        description: Tax amount charged on the order.
+
+      - name: order_total
+        description: Total order amount including tax.
+
+      - name: store_location
+        description: Location associated with the store where the order was placed.
+
+      - name: tax_rate
+        description: Tax rate configured for the store.
+        data_tests:
+          - not_null
+
+      - name: items_count
+        description: Number of distinct order items associated with the order.
+
+      - name: distinct_products_count
+        description: Number of distinct products associated with the order.
+
+      - name: expected_tax
+        description: Expected tax amount, calculated as the order subtotal multiplied by the store tax rate.
+
+      - name: tax_delta
+        description: Difference between the tax paid and the calculated expected tax.
