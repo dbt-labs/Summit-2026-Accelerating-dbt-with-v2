@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: >
+      Orders fact table at one row per order, with dollar measures, store tax
+      context, item rollups, and expected-tax vs. tax-paid calculations.
+    columns:
+      - name: order_id
+        description: Primary key. Exactly one row per order.
+        data_tests:
+          - unique
+          - not_null
+      - name: tax_rate
+        description: Store tax rate applied to the order.
+        data_tests:
+          - not_null
+      - name: expected_tax
+        description: subtotal * tax_rate.
+        data_tests:
+          - not_null
+      - name: tax_delta
+        description: tax_paid - expected_tax.
+        data_tests:
+          - not_null

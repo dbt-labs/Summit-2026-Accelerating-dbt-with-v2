@@ -78,4 +78,3 @@ select
     *
 from joined
 order by order_date
-
