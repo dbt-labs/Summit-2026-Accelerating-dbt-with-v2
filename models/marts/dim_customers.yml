@@ -4,6 +4,8 @@ models:
     providing insights into customer behavior and spending patterns. It includes details
     such as the customer's first and last order dates, total spending, and whether
     they are a return customer.
+  state:
+    lag_tolerance: "{{ '4h' if target.name == 'prod' else '7d' }}"
   columns:
   - name: customer_id
     description: A unique identifier for each customer.
