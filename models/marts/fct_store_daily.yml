@@ -1,0 +1,40 @@
+models:
+  - name: fct_store_daily
+    description: Daily store performance at one row per store and order date.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - store_id
+              - order_date
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "abs(daily_order_total - (daily_subtotal + daily_tax_paid)) < 0.01"
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "days_since_store_open >= 0"
+    columns:
+      - name: store_id
+        description: Store identifier and first component of the model grain.
+        data_tests:
+          - not_null
+      - name: store_location
+        description: Store location associated with the store identifier.
+      - name: tax_rate
+        description: Tax rate applied by the store.
+      - name: order_date
+        description: Order activity date and second component of the model grain.
+        data_tests:
+          - not_null
+      - name: orders_count
+        description: Number of orders placed at the store on the order date.
+      - name: daily_subtotal
+        description: Total pre-tax order amount for the store and order date.
+      - name: daily_tax_paid
+        description: Total tax paid for the store and order date.
+      - name: daily_order_total
+        description: Total order amount including tax for the store and order date.
+      - name: avg_order_total
+        description: Average order total for the store and order date.
+      - name: days_since_store_open
+        description: Number of days between the store opening date and order date.
