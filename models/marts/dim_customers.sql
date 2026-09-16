@@ -24,7 +24,7 @@ customer_orders_summary as (
         count(distinct orders.store_id) as count_unique_location_visits,
         sum(orders.subtotal) as total_spend_pretax,
         sum(orders.tax_paid) as total_tax_paid,
-        sum(orders.order_total) as total_spend
+        sum(orders.order_total) as total_spend,
 
 
     from orders
@@ -47,6 +47,11 @@ final as (
         total_location_visits,
         count_unique_location_visits,
         total_spend_pretax,
+        case
+            when customer_orders_summary.total_spend > 1000 then 'high_spender'
+            else 'low_spender'
+        end as customer_spend_level,
+
         total_tax_paid,
         total_spend,
 
