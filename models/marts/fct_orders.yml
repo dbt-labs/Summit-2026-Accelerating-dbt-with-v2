@@ -1,0 +1,6 @@
+models:
+  - name: fct_orders
+    columns:
+      - name: tax_rate
+        data_tests:
+          - not_null
