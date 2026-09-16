@@ -1,0 +1,8 @@
+models:
+  - name: task_1_fct_orders
+    columns:
+      - name: order_id
+        description: A unique, non-null identifier for each order.
+        data_tests:
+          - unique
+          - not_null
