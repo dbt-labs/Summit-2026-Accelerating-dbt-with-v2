@@ -1,0 +1,21 @@
+models:
+  - name: fct_store_daily
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - store_id
+              - order_date
+      - dbt_utils.expression_is_true:
+          name: avg_order_total_reconciles_to_daily_total
+          arguments:
+            expression: "coalesce(abs((avg_order_total * orders_count) - daily_order_total), 1) < 0.01"
+      - dbt_utils.expression_is_true:
+          name: daily_order_total_reconciles_to_subtotal_and_tax
+          arguments:
+            expression: "coalesce(abs(daily_order_total - (daily_subtotal + daily_tax_paid)), 1) < 0.01"
+      - dbt_utils.expression_is_true:
+          name: days_since_store_open_is_non_negative
+          arguments:
+            expression: "coalesce(days_since_store_open, -1) >= 0"
+
