@@ -49,6 +49,11 @@ final as (
         total_spend_pretax,
         total_tax_paid,
         total_spend,
+        case
+            when customer_orders_summary.total_spend > 1000 then 'high_spender'
+            else 'low_spender'
+        end as customer_spend_level,
+
 
         -- boolean
         is_return_customer,
