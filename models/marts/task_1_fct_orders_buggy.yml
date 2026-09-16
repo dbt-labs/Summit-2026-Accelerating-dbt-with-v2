@@ -1,0 +1,9 @@
+models:
+  - name: task_1_fct_orders_buggy
+    columns:
+      - name: order_id
+        data_tests:
+          - unique
+      - name: tax_rate
+        data_tests:
+          - not_null
