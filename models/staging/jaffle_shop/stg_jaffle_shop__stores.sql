@@ -16,6 +16,8 @@ final as (
         name as store_location,
         opened_at,
 
+
+
         -- numeric
         tax_rate
 
