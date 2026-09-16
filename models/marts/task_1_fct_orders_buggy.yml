@@ -1,0 +1,43 @@
+models:
+  - name: task_1_fct_orders_buggy
+    description: One row per order, enriched with store details, item counts, and expected tax calculations.
+    columns:
+      - name: order_id
+        description: The unique identifier for the order.
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: The customer who placed the order.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_jaffle_shop__customers')
+                field: customer_id
+      - name: store_id
+        description: The store where the order was placed.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_jaffle_shop__stores')
+                field: store_id
+      - name: order_date
+        description: The date the order was placed.
+      - name: subtotal
+        description: The order subtotal before tax.
+      - name: tax_paid
+        description: The tax paid on the order.
+      - name: order_total
+        description: The total order amount including tax.
+      - name: store_location
+        description: The location of the store where the order was placed.
+      - name: tax_rate
+        description: The tax rate configured for the store.
+      - name: items_count
+        description: The number of order items in the order.
+      - name: distinct_products_count
+        description: The number of distinct products in the order.
+      - name: expected_tax
+        description: The expected tax calculated from the subtotal and store tax rate.
+      - name: tax_delta
+        description: The difference between tax paid and expected tax.
