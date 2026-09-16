@@ -1,0 +1,14 @@
+models:
+  - name: fct_store_daily
+    description: Daily order metrics by store. One row per store per order date.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - store_id
+              - order_date
+    columns:
+      - name: store_id
+        description: The store associated with the daily order metrics.
+      - name: order_date
+        description: The date for which order metrics are aggregated.
