@@ -3,11 +3,11 @@ with orders as (
     select
         order_id,
         store_id,
-        orderedat,
-        sub_total,
+        ordered_at,
+        subtotal,
         tax_paid,
         order_total
-    from {{ ref('stg_jaffle_shop__order') }}
+    from {{ ref('stg_jaffle_shop__orders') }}
 
 ),
 
@@ -15,10 +15,9 @@ stores as (
 
     select
         store_id,
-        store_locaton,
-        taxrate,
-        opened_at,
-        is_open
+        store_location,
+        tax_rate,
+        opened_at
     from {{ ref('stg_jaffle_shop__stores') }}
 
 ),
@@ -44,9 +43,11 @@ daily_rollup as (
     left join stores
         on orders.store_id = stores.store_id
 
-    group by
-        orders.store_id,
-        order_date
+ group by
+    orders.store_id,
+    stores.store_location,
+    stores.tax_rate,
+    order_date
 
 )
 
