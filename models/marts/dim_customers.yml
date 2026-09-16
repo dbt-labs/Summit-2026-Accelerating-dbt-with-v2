@@ -30,3 +30,67 @@ models:
     description: The date and time when the customer placed their first order.
   - name: last_ordered_at
     description: The date and time when the customer placed their most recent order.
+
+
+
+- name: fct_orders
+  description: One row per order with store details, item counts, and calculated tax variance.
+  columns:
+  - name: order_id
+    description: The unique identifier for each order.
+    data_tests:
+      - unique
+      - not_null
+  - name: tax_rate
+    description: The tax rate assigned to the order's store.
+    data_tests:
+      - not_null
+  - name: expected_tax
+    description: Tax expected based on the order subtotal and store tax rate.
+    data_tests:
+      - not_null
+  - name: tax_delta
+    description: Difference between tax paid and expected tax.
+    data_tests:
+      - not_null
+
+
+
+- name: fct_store_daily
+  description: One row per store per order day with daily sales and store-age measures.
+  data_tests:
+    - dbt_utils.unique_combination_of_columns:
+        arguments:
+          combination_of_columns:
+            - store_id
+            - order_date
+    - dbt_utils.expression_is_true:
+        arguments:
+          expression: "abs(daily_order_total - (daily_subtotal + daily_tax_paid)) < 0.01"
+    - dbt_utils.expression_is_true:
+        arguments:
+          expression: "abs(avg_order_total * orders_count - daily_order_total) < 0.01"
+    - dbt_utils.expression_is_true:
+        arguments:
+          expression: "days_since_store_open >= 0"
+  columns:
+  - name: store_id
+    description: The store associated with the daily order activity.
+    data_tests:
+      - not_null
+  - name: order_date
+    description: The calendar day on which the orders were placed.
+    data_tests:
+      - not_null
+  - name: avg_order_total
+    description: Average order total for the store and day.
+    data_tests:
+      - not_null
+  - name: daily_order_total
+    description: Sum of order totals for the store and day.
+    data_tests:
+      - not_null
+  - name: days_since_store_open
+    description: Number of days between store opening and the order date.
+    data_tests:
+      - not_null
