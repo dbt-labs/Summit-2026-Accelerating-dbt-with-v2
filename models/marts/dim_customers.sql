@@ -55,7 +55,12 @@ final as (
 
         -- dates/timestamps
         first_ordered_at,
-        last_ordered_at
+        last_ordered_at,
+        case
+
+    when customer_orders_summary.total_spend > 1000 then 'high_spender'
+
+    else 'low_spender' end  as customer_spend_level
 
     from customers
 

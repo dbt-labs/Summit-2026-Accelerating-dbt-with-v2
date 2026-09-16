@@ -8,7 +8,7 @@ with orders as (
         subtotal,
         tax_paid,
         order_total
-    from {{ ref('stg_jaffle_shop__order') }}
+    from {{ ref('stg_jaffle_shop__orders') }}
 
 ),
 
@@ -17,18 +17,8 @@ stores as (
     select
         store_id,
         store_location,
-        taxrate
+        tax_rate
     from {{ ref('stg_jaffle_shop__stores') }}
-
-),
-
-order_items as (
-
-    select
-        order_item_id,
-        order_id,
-        product_id
-    from {{ ref('stg_jaffle_shop__order_items') }}
 
 ),
 
@@ -36,10 +26,10 @@ item_rollup as (
 
     select
         order_id,
-        count(distinct order_item_id) as items_count,
-        count(product_id) as distinct_products_count
-    from order_items
-    group by order_id, product_id
+        count(order_item_id) as items_count,
+        count(distinct product_id) as distinct_products_count
+    from {{ ref('stg_jaffle_shop__order_items') }}
+    group by order_id
 
 ),
 
@@ -55,14 +45,14 @@ joined as (
         orders.tax_paid,
         orders.order_total,
 
-        stores.store_location,
         stores.tax_rate,
+        stores.store_location,
 
-        item_rollup.items_count,
-        item_rollup.distinct_products_count,
+        coalesce(item_rollup.items_count, 0) as items_count,
+        coalesce(item_rollup.distinct_products_count, 0)
+            as distinct_products_count,
 
-        orders.subtotal * stores.tax_rate as expected_tax,
-        orders.tax_paid - expected_tax as tax_delta
+        orders.subtotal * stores.tax_rate as expected_tax
 
     from orders
 
@@ -70,10 +60,18 @@ joined as (
         on orders.store_id = stores.store_id
 
     left join item_rollup
-        on order_items.order_id = item_rollup.order_id
+        on orders.order_id = item_rollup.order_id
+
+),
+
+final as (
+
+    select
+        *,
+        tax_paid - expected_tax as tax_delta
+    from joined
 
 )
 
 select *
-from joined
-order by order_date desc, order_id
+from final
