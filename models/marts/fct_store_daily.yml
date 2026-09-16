@@ -6,3 +6,6 @@ models:
             combination_of_columns:
               - store_id
               - order_date
+      - dbt_utils.expression_is_true:
+          arguments:
+            expression: "coalesce(days_since_store_open >= 0, false)"
