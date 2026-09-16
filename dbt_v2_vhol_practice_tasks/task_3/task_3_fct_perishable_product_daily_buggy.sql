@@ -4,7 +4,7 @@ with order_items as (
         order_item_id,
         order_id,
         product_id
-    from {{ ref('stg_jaffle_shop__order_item') }}
+    from {{ ref('stg_jaffle_shop__order_items') }}
 
 ),
 
