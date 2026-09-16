@@ -1,0 +1,66 @@
+models:
+  - name: fct_store_daily
+    description: One row per store per order date, with daily order and revenue metrics.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - store_id
+              - order_date
+      - dbt_utils.expression_is_true:
+          name: fct_store_daily_positive_order_count
+          arguments:
+            expression: "orders_count > 0"
+      - dbt_utils.expression_is_true:
+          name: fct_store_daily_nonnegative_days_since_open
+          arguments:
+            expression: "days_since_store_open >= 0"
+      - dbt_utils.expression_is_true:
+          name: fct_store_daily_consistent_order_total
+          arguments:
+            expression: "abs(daily_order_total - (daily_subtotal + daily_tax_paid)) <= 0.01"
+      - dbt_utils.expression_is_true:
+          name: fct_store_daily_consistent_average
+          arguments:
+            expression: "abs(avg_order_total - (daily_order_total / nullif(orders_count, 0))) <= 0.01"
+    columns:
+      - name: store_id
+        description: Unique identifier for the store.
+        data_tests:
+          - not_null
+      - name: store_location
+        description: Store location name.
+        data_tests:
+          - not_null
+      - name: tax_rate
+        description: Tax rate applied by the store.
+        data_tests:
+          - not_null
+      - name: order_date
+        description: Calendar day on which the orders were placed.
+        data_tests:
+          - not_null
+      - name: orders_count
+        description: Number of orders placed at the store on the order date.
+        data_tests:
+          - not_null
+      - name: daily_subtotal
+        description: Total pretax order amount for the store and order date.
+        data_tests:
+          - not_null
+      - name: daily_tax_paid
+        description: Total tax paid for the store and order date.
+        data_tests:
+          - not_null
+      - name: daily_order_total
+        description: Total order amount including tax for the store and order date.
+        data_tests:
+          - not_null
+      - name: avg_order_total
+        description: Average order total for the store and order date.
+        data_tests:
+          - not_null
+      - name: days_since_store_open
+        description: Number of days between the store opening date and the order date.
+        data_tests:
+          - not_null
