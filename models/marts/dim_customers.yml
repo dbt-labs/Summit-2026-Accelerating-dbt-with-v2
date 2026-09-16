@@ -26,6 +26,9 @@ models:
     description: The total amount spent by the customer including tax.
   - name: is_return_customer
     description: Indicates whether the customer has made more than one order.
+  - name: has_visited_opened_store
+    description: Indicates whether the customer has placed an order at any store with a non-null opening timestamp.
+
   - name: first_ordered_at
     description: The date and time when the customer placed their first order.
   - name: last_ordered_at

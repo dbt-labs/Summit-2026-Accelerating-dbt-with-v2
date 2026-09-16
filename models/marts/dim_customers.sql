@@ -12,6 +12,12 @@ orders as (
 
 ),
 
+stores as (
+
+    select * from {{ ref('stg_jaffle_shop__stores') }}
+
+),
+
 customer_orders_summary as (
 
     select 
@@ -24,10 +30,14 @@ customer_orders_summary as (
         count(distinct orders.store_id) as count_unique_location_visits,
         sum(orders.subtotal) as total_spend_pretax,
         sum(orders.tax_paid) as total_tax_paid,
-        sum(orders.order_total) as total_spend
+        sum(orders.order_total) as total_spend,
+        count_if(stores.opened_at is not null) > 0 as has_visited_opened_store
 
 
     from orders
+
+    left join stores
+        on orders.store_id = stores.store_id
 
     group by orders.customer_id
 
@@ -48,10 +58,16 @@ final as (
         count_unique_location_visits,
         total_spend_pretax,
         total_tax_paid,
+        case
+        when customer_orders_summary.total_spend > 1000 then 'high_spender'
+        else 'low_spender'
+        end as customer_spend_level,
+
         total_spend,
 
         -- boolean
         is_return_customer,
+        coalesce(has_visited_opened_store, false) as has_visited_opened_store,
 
         -- dates/timestamps
         first_ordered_at,

@@ -1,0 +1,8 @@
+models:
+  - name: task_1_fct_orders_buggy
+    description: Order-level facts enriched with store and item details.
+    columns:
+      - name: tax_paid
+        description: The amount of tax paid for the order.
+        data_tests:
+          - not_null
