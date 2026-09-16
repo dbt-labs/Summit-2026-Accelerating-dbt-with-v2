@@ -3,11 +3,11 @@ with orders as (
     select
         order_id,
         store_id,
-        orderedat,
-        sub_total,
+        ordered_at,
+        subtotal,
         tax_paid,
         order_total
-    from {{ ref('stg_jaffle_shop__order') }}
+    from {{ ref('stg_jaffle_shop__orders') }}
 
 ),
 
@@ -15,10 +15,10 @@ stores as (
 
     select
         store_id,
-        store_locaton,
-        taxrate,
+        store_location,
+        tax_rate,
         opened_at,
-        is_open
+       -- is_open
     from {{ ref('stg_jaffle_shop__stores') }}
 
 ),
