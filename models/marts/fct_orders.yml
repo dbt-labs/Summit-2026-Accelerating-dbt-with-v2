@@ -1,0 +1,35 @@
+models:
+- name: fct_orders
+  description: One record per order, enriched with store details, item counts, and tax calculations.
+  columns:
+  - name: order_id
+    description: A unique identifier for each order.
+    data_tests:
+      - unique
+      - not_null
+  - name: customer_id
+    description: The identifier of the customer who placed the order.
+  - name: store_id
+    description: The identifier of the store where the order was placed.
+  - name: order_date
+    description: The date the order was placed.
+  - name: subtotal
+    description: The order subtotal before tax.
+  - name: tax_paid
+    description: The amount of tax paid on the order.
+  - name: order_total
+    description: The total order amount including tax.
+  - name: store_location
+    description: The location of the store where the order was placed.
+  - name: tax_rate
+    description: The tax rate associated with the store.
+    data_tests:
+      - not_null
+  - name: items_count
+    description: The number of distinct items in the order.
+  - name: distinct_products_count
+    description: The number of distinct products in the order.
+  - name: expected_tax
+    description: The expected tax amount calculated from the subtotal and store tax rate.
+  - name: tax_delta
+    description: The difference between the tax paid and the expected tax amount.

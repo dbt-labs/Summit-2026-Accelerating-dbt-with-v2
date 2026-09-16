@@ -1,0 +1,46 @@
+models:
+- name: fct_store_daily
+  description: One record per store per order date, with daily order totals and store attributes.
+  data_tests:
+    - dbt_utils.unique_combination_of_columns:
+        arguments:
+          combination_of_columns:
+            - store_id
+            - order_date
+    - dbt_utils.expression_is_true:
+        name: avg_order_total_is_reasonable
+        arguments:
+          expression: "avg_order_total >= 0 and avg_order_total <= daily_order_total"
+    - dbt_utils.expression_is_true:
+        name: daily_order_total_reconciles
+        arguments:
+          expression: "daily_order_total = daily_subtotal + daily_tax_paid"
+    - dbt_utils.expression_is_true:
+        name: days_since_store_open_is_nonnegative
+        arguments:
+          expression: "days_since_store_open >= 0"
+  columns:
+  - name: store_id
+    description: The identifier of the store.
+    data_tests:
+      - not_null
+  - name: store_location
+    description: The location of the store.
+  - name: tax_rate
+    description: The tax rate associated with the store.
+  - name: order_date
+    description: The date for which order activity is aggregated.
+    data_tests:
+      - not_null
+  - name: orders_count
+    description: The number of orders placed at the store on the order date.
+  - name: daily_subtotal
+    description: The sum of order subtotals before tax for the store and order date.
+  - name: daily_tax_paid
+    description: The sum of tax paid for the store and order date.
+  - name: daily_order_total
+    description: The sum of order totals including tax for the store and order date.
+  - name: avg_order_total
+    description: The average order total for the store and order date.
+  - name: days_since_store_open
+    description: The number of days between the store opening date and the order date.
