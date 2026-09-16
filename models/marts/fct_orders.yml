@@ -1,0 +1,52 @@
+models:
+  - name: fct_orders
+    description: One row per order, enriched with store attributes, item counts, and tax reconciliation fields for order-level analysis.
+    columns:
+      - name: order_id
+        description: Primary key for the order.
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: Customer who placed the order.
+        data_type: varchar
+      - name: store_id
+        description: Store where the order was placed.
+        data_type: varchar
+      - name: order_date
+        description: Day on which the order was placed, truncated from the source order timestamp.
+        data_type: timestamp_ntz
+      - name: subtotal
+        description: Order subtotal in dollars before tax.
+        data_type: number(16, 2)
+      - name: tax_paid
+        description: Tax paid on the order in dollars.
+        data_type: number(16, 2)
+      - name: order_total
+        description: Total order amount in dollars including tax.
+        data_type: number(16, 2)
+      - name: store_location
+        description: Location name of the store where the order was placed.
+        data_type: varchar
+      - name: tax_rate
+        description: Tax rate configured for the store.
+        data_type: float
+        data_tests:
+          - not_null
+      - name: items_count
+        description: Number of distinct order items in the item rollup.
+        data_type: number(18, 0)
+      - name: distinct_products_count
+        description: Number of distinct products included in the order.
+        data_type: number(18, 0)
+      - name: expected_tax
+        description: Expected tax calculated from the order subtotal and store tax rate, rounded to two decimal places.
+        data_type: number(16, 2)
+        data_tests:
+          - not_null
+      - name: tax_delta
+        description: Difference between the tax paid and the rounded expected tax.
+        data_type: number(17, 2)
+        data_tests:
+          - not_null
