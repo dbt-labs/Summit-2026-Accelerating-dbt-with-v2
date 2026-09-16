@@ -1,4 +1,4 @@
-with 
+with
 
 customers as (
 
@@ -14,7 +14,7 @@ orders as (
 
 customer_orders_summary as (
 
-    select 
+    select
 
         orders.customer_id,
         min(orders.ordered_at) as first_ordered_at,
@@ -26,7 +26,6 @@ customer_orders_summary as (
         sum(orders.tax_paid) as total_tax_paid,
         sum(orders.order_total) as total_spend
 
-
     from orders
 
     group by orders.customer_id
@@ -36,7 +35,7 @@ customer_orders_summary as (
 final as (
 
     select
-    
+
         -- primary key
         customers.customer_id,
 
@@ -48,6 +47,11 @@ final as (
         count_unique_location_visits,
         total_spend_pretax,
         total_tax_paid,
+        case
+            when customer_orders_summary.total_spend > 1000 then 'high_spender'
+            else 'low_spender' end as
+        customer_spend_level,
+
         total_spend,
 
         -- boolean
