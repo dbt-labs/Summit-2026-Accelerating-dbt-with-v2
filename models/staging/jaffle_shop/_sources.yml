@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: jaffle_shop
     database: raw
-    schema: accelerating_fusion
+    schema: raw_v2
     description: Ecommerce data for the Jaffle Shop
     tables:
       - name: customers
@@ -13,7 +13,7 @@ sources:
         identifier: raw_orders
         description: One record per order (consisting of one or more order items)
       - name: order_items
-        identifier: raw_order_items
+        identifier: raw_items
         description: Items included in an order
       - name: stores
         identifier: raw_stores
