@@ -81,11 +81,11 @@ final as (
         -- FIX: coalesce requires a default value; use 0 so products with no perishable supplies don't error/null out
 
         coalesce(perishable_supply_costs.perishable_supply_cost, 0) * daily_product_sales.items_sold as daily_perishable_cost,
-        -- FIX: coalesce previously had wrong arg count and was applied after multiplication; now safe and explicit
+        -- FIX: single, consistent definition (removed duplicate/conflicting versions from starter)
 
-                perishable_supply_costs.perishable_supply_cost,
-        daily_revenue - (perishable_supply_costs.perishable_supply_cost * daily_product_sales.items_sold) as daily_profit,
-        coalesce(perishable_supply_costs.perishable_supply_cost) * daily_product_sales.items_sold as daily_perishable_cost
+        (daily_product_sales.items_sold * products.product_price)
+            - (coalesce(perishable_supply_costs.perishable_supply_cost, 0) * daily_product_sales.items_sold) as daily_profit
+        -- FIX: references the coalesced, non-duplicated daily_perishable_cost logic
 
     from daily_product_sales
     left join products
